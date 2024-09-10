@@ -1,7 +1,8 @@
 // useTasks.js
 import { useState, useEffect } from 'react';
+import { TODO_API } from "../url";
 
-export const useToDo = (apiUrl) => {
+export const useToDo = () => {
   const [toDoData, setToDoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,7 +10,7 @@ export const useToDo = (apiUrl) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(TODO_API);
         const data = await response.json();
 
       
@@ -23,7 +24,7 @@ export const useToDo = (apiUrl) => {
     };
 
     fetchTasks();
-  }, [apiUrl]);
+  }, []);
 
   return { toDoData, loading, error,setToDoData };
 };

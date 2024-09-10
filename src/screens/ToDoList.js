@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useToDo } from "../hooks/useToDo";
-import { TODO_API } from "../url";
 
 export const ToDoList = () => {
-  const { toDoData } = useToDo(TODO_API);
-  const [currentList, setCurrentList] = useState(toDoData);
+  const { toDoData } = useToDo();
+  const [currentList, setCurrentList] = useState([]);
   const [filterBy, setFilterBy] = useState("");
- 
 
   useEffect(() => {
     filterData();
@@ -15,7 +13,7 @@ export const ToDoList = () => {
   const filterData = () => {
     let newData = [...toDoData];
 
-    // Filter
+    // Filter and Sort
     switch (filterBy) {
       case "active":
         newData = newData.filter(item => !item.completed);
@@ -24,7 +22,7 @@ export const ToDoList = () => {
         newData = newData.filter(item => item.completed);
         break;
       case "old-first":
-        newData = newData.sort((a, b) => a.id - b.id); 
+        newData = newData.sort((a, b) => a.id - b.id);
         break;
       case "new-first":
         newData = newData.sort((a, b) => b.id - a.id);
@@ -40,32 +38,106 @@ export const ToDoList = () => {
     setCurrentList(newData);
   };
 
+  const handleFilterClick = (filter) => {
+    setFilterBy(filter);
+  };
+
   return (
     <>
-      <div style={Styles.buttonContainer}>
-        <button onClick={() => setFilterBy("active")}>Show Active</button>
-        <button onClick={() => setFilterBy("completed")}>Show Completed</button>
-        <button onClick={() => setFilterBy("name")}>Sort Alphabetically</button>
-        <button onClick={() => setFilterBy("old-first")}>Show Oldest First</button>
-        <button onClick={() => setFilterBy("new-first")}>Show Newest First</button>
-        <div>{currentList?.length}</div>
+      <div style={styles.buttonContainer}>
+        <button
+          style={filterBy === "active" ? styles.activeButton : styles.button}
+          onClick={() => handleFilterClick("active")}
+        >
+          Show Active
+        </button>
+        <button
+          style={filterBy === "completed" ? styles.activeButton : styles.button}
+          onClick={() => handleFilterClick("completed")}
+        >
+          Show Completed
+        </button>
+        <button
+          style={filterBy === "name" ? styles.activeButton : styles.button}
+          onClick={() => handleFilterClick("name")}
+        >
+          Sort Alphabetically
+        </button>
+        <button
+          style={filterBy === "old-first" ? styles.activeButton : styles.button}
+          onClick={() => handleFilterClick("old-first")}
+        >
+          Show Oldest First
+        </button>
+        <button
+          style={filterBy === "new-first" ? styles.activeButton : styles.button}
+          onClick={() => handleFilterClick("new-first")}
+        >
+          Show Newest First
+        </button>
+        <div style={styles.count}>Total: {currentList.length}</div>
       </div>
-      <div>
-        {currentList.map((item) => (
-          <div key={item.id}>
-            <h3>{item.title}</h3>
-          </div>
-        ))}
+      <div style={styles.listContainer}>
+        {currentList.length > 0 ? (
+          currentList.map((item) => (
+            <div key={item.id} style={styles.item}>
+              {item.title}
+            </div>
+          ))
+        ) : (
+          <p style={styles.noToDos}>No to-dos available</p>
+        )}
       </div>
     </>
   );
 };
 
-const Styles = {
+const styles = {
+  listContainer: {
+    padding: "20px",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
+  
   buttonContainer: {
     display: "flex",
-    width: "50vw",
-    justifyContent: "space-between",
-    marginRight: "10px",
+    flexDirection: "row",
+    justifyContent: "center",
+    width: "100%",
+    margin: "10px 0",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
+  button: {
+    padding: "10px 20px",
+    margin: "5px",
+    border: "1px solid #ddd",
+    backgroundColor: "#f9f9f9",
+    cursor: "pointer",
+    transition: "background-color 0.3s, color 0.3s",
+  },
+  activeButton: {
+    padding: "10px 20px",
+    margin: "5px",
+    border: "1px solid #007bff",
+    backgroundColor: "#007bff",
+    color: "white",
+    cursor: "pointer",
+    transition: "background-color 0.3s, color 0.3s",
+  },
+  count: {
+    marginTop: "10px",
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
+  item: {
+    padding: "10px",
+    borderBottom: "1px solid #ddd",
+    textAlign: "center",
+  },
+  noToDos: {
+    textAlign: "center",
+    color: "#888",
+    fontStyle: "italic",
   },
 };

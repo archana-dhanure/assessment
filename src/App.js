@@ -5,7 +5,7 @@ import Home from "./components/Home.js";
 
 
 import {ToDoList} from "./screens/ToDoList";
-import {ToDoDashboard} from "./screens/ToDoDashboard";
+import ToDoDashboard from "./screens/ToDoDashboard";
 import { useTheme } from './appContext/AppThemeContext';
 import { AppThemeChanger } from './components/AppThemeChanger';
 
@@ -60,7 +60,7 @@ const AppStyles = {
     fontSize: "14px"
   },
   dark: {
-    backgroundColor: "black",
+    backgroundColor: "#242020",
     color: "white"
   },
   light: {
@@ -69,7 +69,6 @@ const AppStyles = {
   }
 
 }
-
 
 export default App;
 
